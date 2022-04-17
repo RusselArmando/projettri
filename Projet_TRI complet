@@ -1,0 +1,271 @@
+import time
+import numpy as np
+import matplotlib.pyplot as plt
+import random
+
+liste_temps_tri_rapide = []
+liste_temps_tri_fusion = []
+l = []
+liste_itteration = []
+liste_de_liste = []
+def meilleur_cas():
+    global l,liste_itteration,liste_de_liste
+
+    n = 0
+    for i in range(10):
+        n += 10
+        liste_itteration.append(n)
+        liiste = []
+        for j in range(liste_itteration[i]):
+            nombre_de_la_liste_liiste = j
+            liiste.append(nombre_de_la_liste_liiste)
+            if len(liiste) == liste_itteration[i]:
+                l = liiste
+                liste_de_liste.append(l)
+    print("Liste des listes non triés (meilleur cas)")
+    print(liste_de_liste)
+    print("Tableaux non triés (meilleur cas)")
+    for i in range(len(liste_de_liste)):
+        l = (liste_de_liste[i])
+        print(l)
+
+    print("\n\n\n")
+def cas_moyen():
+    global l , liste_itteration,liste_de_liste
+    liste_itteration = []
+    liste_de_liste = []
+    n = 0
+    for i in range(10):
+        n += 10
+        liste_itteration.append(n)
+        liiste = []
+        for j in range(liste_itteration[i]):
+            nombre_de_la_liste_liiste = random.randint(0,liste_itteration[i])
+            liiste.append(nombre_de_la_liste_liiste)
+            if len(liiste) == liste_itteration[i]:
+                l = liiste
+                liste_de_liste.append(l)
+    print("Liste des listes non triés (cas moyen)")
+    print(liste_de_liste)
+    print("Tableaux non triés (cas moyen)")
+    for i in range(len(liste_de_liste)):
+        l= (liste_de_liste[i])
+        print(l)
+
+    print("\n\n\n")
+def pire_cas():
+    global l,liste_itteration,liste_de_liste
+
+    n = 0
+    for i in range(10):
+        n += 10
+        liste_itteration.append(n)
+        liiste = []
+        for j in range(liste_itteration[i]):
+            nombre_de_la_liste_liiste = liste_itteration[i]-j
+            liiste.append(nombre_de_la_liste_liiste)
+            if len(liiste) == liste_itteration[i]:
+                l = liiste
+                liste_de_liste.append(l)
+    print("Liste des listes non triés (pire cas)")
+    print(liste_de_liste)
+    print("Tableaux non triés (pire cas)")
+    for i in range(len(liste_de_liste)):
+        l = (liste_de_liste[i])
+        print(l)
+
+    print("\n\n\n")
+
+def quicksort():
+    global liste_temps_tri_rapide
+    def partitionner(l, debut, fin):
+        valeur_pivot = l[fin]
+        indice_pivot = debut
+        # Fixer la valeur et l'indice du pivot
+
+        # parcourir les éléments
+        for i in range(debut, fin):
+            if l[i] <= valeur_pivot:
+                l[i], l[indice_pivot] = l[indice_pivot], l[i]
+                indice_pivot += 1
+
+        l[indice_pivot], l[fin] = l[fin], l[indice_pivot]
+        return indice_pivot
+
+        # retourner l'indice du pivot
+
+    def tri_rapide(l, debut=0, fin=None):
+        if fin == None:
+            fin = len(l)-1
+
+        if fin > debut:
+            # condition de fin
+            pivot = partitionner(l, debut, fin)
+            # Chercher le pivot
+            # tri sur la partie gauche
+            tri_rapide(l, debut, pivot-1)
+            # tri sur la partie droite
+            tri_rapide(l, pivot+1, fin)
+
+
+    print("Tableau triés par tri rapide")
+    liste_temps_tri_rapide = []
+    for i in range(len(liste_de_liste)):
+        l = liste_de_liste[i]
+        temps0,temps1 = 0,0
+        temps0 = time.perf_counter()
+
+        tri_rapide(l)
+        temps1 = time.perf_counter()
+        temps = temps1-temps0
+        print(f"Le temps mis pour trier {len(l)} éléments par tri rapide est de {temps}s")
+        print(l)
+        liste_temps_tri_rapide.append(temps)
+
+
+def mergesort():
+    global liste_temps_tri_fusion
+    def tri_fusion(tableau):
+        if  len(tableau) <= 1:
+            return tableau
+        pivot = len(tableau)//2
+        tableau1 = tableau[:pivot]
+        tableau2 = tableau[pivot:]
+        gauche = tri_fusion(tableau1)
+        droite = tri_fusion(tableau2)
+        fusionne = fusion(gauche,droite)
+        return fusionne
+    #Tri fusion fonction de fusion de 2 listes
+    def fusion(tableau1,tableau2):
+        indice_tableau1 = 0
+        indice_tableau2 = 0
+        taille_tableau1 = len(tableau1)
+        taille_tableau2 = len(tableau2)
+        tableau_fusionne = []
+        while indice_tableau1<taille_tableau1 and indice_tableau2<taille_tableau2:
+            if tableau1[indice_tableau1] < tableau2[indice_tableau2]:
+                tableau_fusionne.append(tableau1[indice_tableau1])
+                indice_tableau1 += 1
+            else:
+                tableau_fusionne.append(tableau2[indice_tableau2])
+                indice_tableau2 += 1
+        while indice_tableau1<taille_tableau1:
+            tableau_fusionne.append(tableau1[indice_tableau1])
+            indice_tableau1+=1
+        while indice_tableau2<taille_tableau2:
+            tableau_fusionne.append(tableau2[indice_tableau2])
+            indice_tableau2+=1
+        return tableau_fusionne
+
+    print("tableaux triés par tri fusion")
+    for i in range(len(liste_de_liste)):
+        print(tri_fusion(liste_de_liste[i]))
+
+
+    print("\n\n\n")
+    print("Tableau triés par tri rapide")
+    liste_temps_tri_fusion = []
+    for i in range(len(liste_de_liste)):
+        l = liste_de_liste[i]
+        temps0, temps1 = 0, 0
+        temps0 = time.perf_counter()
+
+        tri_fusion(liste_de_liste[i])
+        temps1 = time.perf_counter()
+        temps = temps1 - temps0
+        print(f"Le temps mis pour trier {len(l)} éléments par tri fusion est de {temps}s")
+        print(l)
+        liste_temps_tri_fusion.append(temps)
+    print(liste_temps_tri_fusion)
+
+def graphe_meilleur_cas():
+
+    for i in range(len(liste_temps_tri_rapide)):
+        temps = liste_temps_tri_rapide[i]
+        nb_elements = liste_itteration[i]
+        print(nb_elements,temps)
+
+    figure, axe = plt.subplots()
+    echelle_nombre_donnee = np.linspace(0, 10_000, 100)
+
+
+    plt.title("Graphe meilleur cas")
+    plt.xlabel("listes de longueur de donnée")
+    plt.ylabel("temps")
+
+    plt.plot(liste_itteration,liste_temps_tri_rapide,label="courbe de tri rapide (meilleur cas)")
+    plt.plot(liste_itteration, liste_temps_tri_fusion, label="courbe de tri fusion (meilleur cas)")
+
+    plt.grid()
+    plt.legend()
+    plt.show()
+    plt.savefig("Graphe meilleur cas.png")
+
+def graphe_cas_moyen():
+    for i in range(len(liste_temps_tri_rapide)):
+        temps = liste_temps_tri_rapide[i]
+        nb_elements = liste_itteration[i]
+        print(nb_elements,temps)
+
+    figure, axe = plt.subplots()
+    echelle_nombre_donnee = np.linspace(0, 10_000, 100)
+
+    plt.xlabel("listes de longueur de donnée")
+    plt.ylabel("temps")
+
+    plt.plot(liste_itteration,liste_temps_tri_rapide,label="courbe de tri rapide (cas moyen)")
+    plt.plot(liste_itteration, liste_temps_tri_fusion, label="courbe de tri fusion (cas moyen)")
+
+    plt.grid()
+    plt.legend()
+    plt.show()
+def graphe_pire_cas():
+    for i in range(len(liste_temps_tri_rapide)):
+        temps = liste_temps_tri_rapide[i]
+        nb_elements = liste_itteration[i]
+        print(nb_elements,temps)
+
+    figure, axe = plt.subplots()
+    echelle_nombre_donnee = np.linspace(0, 10_000, 100)
+
+    plt.xlabel("listes de longueur de donnée")
+    plt.ylabel("temps")
+
+    plt.plot(liste_itteration,liste_temps_tri_rapide,label="courbe de tri rapide (pire cas)")
+    plt.plot(liste_itteration, liste_temps_tri_fusion, label="courbe de tri fusion (pire cas)")
+
+    plt.grid()
+    plt.legend()
+    plt.show()
+
+
+meilleur_cas()
+quicksort()
+mergesort()
+print("\n\n\n")
+print(liste_temps_tri_rapide)
+print(liste_itteration)
+
+graphe_meilleur_cas()
+
+cas_moyen()
+quicksort()
+mergesort()
+print("\n\n\n")
+print(liste_temps_tri_rapide)
+print(liste_itteration)
+
+
+graphe_cas_moyen()
+
+pire_cas()
+quicksort()
+mergesort()
+print("\n\n\n")
+print(liste_temps_tri_rapide)
+print(liste_itteration)
+
+
+graphe_pire_cas()
+
+
